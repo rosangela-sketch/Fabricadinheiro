@@ -29,7 +29,119 @@
 
     <header class="text-center mb-10 w-full px-2">
         <h1 class="text-4xl md:text-6xl font-900 tracking-tighter uppercase italic gold-text mb-2">Fábrica de Dinheiro</h1>
+        <!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NOVA | Fábrica de Dinheiro</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700;900&display=swap');
+        body { background-color: #000; color: #fff; font-family: 'Inter', sans-serif; overflow-x: hidden; }
+        .gold-text { background: linear-gradient(135deg, #bf953f, #fcf6ba, #b38728); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .glass-card { background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(191, 149, 63, 0.2); border-radius: 24px; }
+        .btn-gold { background: linear-gradient(135deg, #bf953f, #aa771c); color: #000; font-weight: 900; transition: 0.4s; cursor: pointer; }
+        .btn-gold:hover { filter: brightness(1.2); box-shadow: 0 0 30px rgba(191, 149, 63, 0.3); }
+        .field { background: rgba(255,255,255,0.05); border: 1px solid #333; border-radius: 12px; padding: 14px; width: 100%; outline: none; color: white; margin-bottom: 15px; appearance: none; }
+        .field:focus { border-color: #bf953f; }
+        .lang-btn { cursor: pointer; opacity: 0.4; transition: 0.3s; font-size: 10px; font-weight: bold; letter-spacing: 2px; }
+        .lang-btn.active { opacity: 1; color: #bf953f; }
+        select.field { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23bf953f'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 1rem center; background-size: 1.5em; padding-right: 2.5rem; }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col items-center p-4">
+
+    <nav class="w-full max-w-2xl flex justify-center gap-8 py-8 mb-4">
+        <span onclick="setLang('pt')" id="l-pt" class="lang-btn active">PORTUGUÊS</span>
+        <span onclick="setLang('en')" id="l-en" class="lang-btn">ENGLISH</span>
+        <span onclick="setLang('es')" id="l-es" class="lang-btn">ESPAÑOL</span>
+    </nav>
+
+    <header class="text-center mb-10 w-full px-2">
+        <h1 class="text-4xl md:text-6xl font-900 tracking-tighter uppercase italic gold-text mb-2">Fábrica de Dinheiro</h1>
         <p id="sub-tag" class="text-gray-500 tracking-[0.2em] text-[11px] font-medium">Estratégia NOVA de Alta <span class="text-white font-black">CONVERSÃO</span></p>
+    </header>
+
+    <main class="w-full max-w-xl glass-card p-6 md:p-10 shadow-2xl">
+        <div id="input-view">
+            <p class="text-[#bf953f] font-bold mb-8 text-center uppercase tracking-widest text-xs">Parâmetros de Produção NOVA</p>
+            
+            <input type="text" id="p1" class="field" placeholder="O que é o produto?">
+            <input type="text" id="p2" class="field" placeholder="Qual o diferencial real?">
+            <input type="text" id="p3" class="field" placeholder="Para quem você quer vender?">
+            <select id="p4" class="field">
+                <option value="sofisticado">Tom: Sofisticado / Luxo</option>
+                <option value="simples">Tom: Simples / Direto</option>
+                <option value="urgente">Tom: Urgência / Venda Rápida</option>
+            </select>
+
+            <button onclick="gerar()" id="btn-acao" class="w-full btn-gold py-5 rounded-xl text-lg uppercase italic mt-6">Ativar Produção</button>
+        </div>
+
+        <div id="result-view" class="hidden">
+            <div id="output" class="text-gray-200 text-lg leading-relaxed italic mb-10 whitespace-pre-line font-light bg-black/40 p-6 rounded-lg border border-white/5"></div>
+            <button onclick="reset()" class="w-full text-gray-600 text-[10px] uppercase tracking-[0.5em] font-bold hover:text-white transition">Nova Ordem de Produção</button>
+        </div>
+    </main>
+
+    <script>
+        const apiKey = "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";
+        let currentLang = 'pt';
+
+        function setLang(l) {
+            currentLang = l;
+            document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById('l-' + l).classList.add('active');
+            const sub = document.getElementById('sub-tag');
+            if(l === 'en') sub.innerText = "NEW HIGH CONVERSION STRATEGY";
+            else if(l === 'es') sub.innerText = "ESTRATEGIA NOVA DE ALTA CONVERSIÓN";
+            else sub.innerText = "ESTRATÉGIA NOVA DE ALTA CONVERSÃO";
+        }
+
+        async function gerar() {
+            const p1 = document.getElementById('p1').value;
+            const p2 = document.getElementById('p2').value;
+            const p3 = document.getElementById('p3').value;
+            const p4 = document.getElementById('p4').value;
+
+            if(!p1 || !p2) { alert("Por favor, preencha os campos principais."); return; }
+
+            const btn = document.getElementById('btn-acao');
+            btn.innerText = "REFINANDO ESTRATÉGIA..."; btn.disabled = true;
+
+            const promptEstrategico = `Aja como um Copywriter de alto padrão da marca NOVA. 
+            Informações: Produto ${p1}, Diferencial ${p2}, Público ${p3}, Tom ${p4}.
+            Regras: NÃO use clichês. NÃO invente mentiras. Se o tom for sofisticado, use vocabulário rico. Se for simples, seja direto.
+            Estrutura: Headline Impactante + Corpo Persuasivo + CTA Elegante.`;
+
+            try {
+                const r = await fetch('https://api.openai.com/v1/chat/completions', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${apiKey}` },
+                    body: JSON.stringify({
+                        model: "gpt-3.5-turbo",
+                        messages: [{role: "system", content: "Você é a inteligência NOVA. Foco em marketing de alta conversão sem clichês."}, {role: "user", content: promptEstrategico}],
+                        temperature: 0.7
+                    })
+                });
+                const d = await r.json();
+                document.getElementById('input-view').classList.add('hidden');
+                document.getElementById('result-view').classList.remove('hidden');
+                document.getElementById('output').innerText = d.choices[0].message.content;
+            } catch (e) { alert("Erro de conexão."); reset(); }
+        }
+
+        function reset() {
+            document.getElementById('input-view').classList.remove('hidden');
+            document.getElementById('result-view').classList.add('hidden');
+            document.getElementById('btn-acao').disabled = false;
+            document.getElementById('btn-acao').innerText = "Ativar Produção";
+            document.querySelectorAll('.field').forEach(f => { if(f.tagName !== 'SELECT') f.value = '' });
+        }
+    </script>
+</body>
+</html>
     </header>
 
     <main class="w-full max-w-xl glass-card p-6 md:p-10 shadow-2xl">
