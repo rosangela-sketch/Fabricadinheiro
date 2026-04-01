@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NOVA | Fábrica de Dinheiro</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700;900&display=swap');
+        body { background-color: #000; color: #fff; font-family: 'Inter', sans-serif; }
+        .gold-text { background: linear-gradient(135deg, #bf953f, #fcf6ba, #b38728); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .glass-card { background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(191, 149, 63, 0.2); border-radius: 24px; }
+        .btn-gold { background: linear-gradient(135deg, #bf953f, #aa771c); color: #000; font-weight: 900; transition: 0.4s; }
+        .field { background: rgba(255,255,255,0.05); border: 1px solid #333; border-radius: 10px; padding: 12px; width: 100%; outline: none; color: white; margin-bottom: 15px; }
+        .field:focus { border-color: #bf953f; }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col items-center p-6">
+
+    <header class="text-center mb-10 w-full">
+        <h1 class="text-4xl md:text-6xl font-900 tracking-tighter uppercase italic gold-text mb-2">Fábrica de Dinheiro</h1>
+        <p class="text-gray-500 tracking-[0.5em] text-[10px] font-bold uppercase">Tecnologia NOVA de Alta Conversão</p>
+    </header>
+
+    <main class="w-full max-w-2xl glass-card p-8">
+        <div id="input-view">
+            <p class="text-[#bf953f] font-bold mb-6 text-center uppercase tracking-widest text-sm">Parâmetros de Produção</p>
+            
+            <input type="text" id="p1" class="field" placeholder="1. O que é o produto? (ex: Marmita de Frango)">
+            <input type="text" id="p2" class="field" placeholder="2. Qual o diferencial real? (ex: Baixo sódio, entrega rápida)">
+            <input type="text" id="p3" class="field" placeholder="3. Para quem é? (ex: Trabalhadores do centro)">
+            <select id="p4" class="field">
+                <option value="sofisticado">Tom: Sofisticado / Elite</option>
+                <option value="popular">Tom: Popular / Acessível</option>
+                <option value="urgente">Tom: Agressivo / Urgência</option>
+            </select>
+
+            <button onclick="gerar()" id="btn-acao" class="w-full btn-gold py-5 rounded-xl text-lg uppercase italic mt-4">Ativar Produção de Elite</button>
+        </div>
+
+        <div id="result-view" class="hidden">
+            <div id="output" class="text-gray-200 text-lg leading-relaxed italic mb-10 whitespace-pre-line font-light bg-black/40 p-6 rounded-lg border border-white/5"></div>
+            <button onclick="reset()" class="w-full text-gray-600 text-[10px] uppercase tracking-[0.5em] font-bold hover:text-white transition">Nova Ordem de Produção</button>
+        </div>
+    </main>
+
+    <script>
+        const apiKey = "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";
+
+        async function gerar() {
+            const p1 = document.getElementById('p1').value;
+            const p2 = document.getElementById('p2').value;
+            const p3 = document.getElementById('p3').value;
+            const p4 = document.getElementById('p4').value;
+
+            if(!p1 || !p2) { alert("Por favor, preencha os campos principais."); return; }
+
+            const btn = document.getElementById('btn-acao');
+            btn.innerText = "MINERANDO DADOS..."; btn.disabled = true;
+
+            const promptEstrategico = `Aja como um Copywriter nível Supremo. Use as informações abaixo estritamente, sem inventar falsos diferenciais.
+            Produto: ${p1}
+            Diferencial: ${p2}
+            Público: ${p3}
+            Tom de voz: ${p4}
+            Gere uma Headline de impacto, um parágrafo de desejo baseado na realidade e um CTA imperativo. Proibido clichês.`;
+
+            try {
+                const r = await fetch('https://api.openai.com/v1/chat/completions', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${apiKey}` },
+                    body: JSON.stringify({
+                        model: "gpt-3.5-turbo",
+                        messages: [{role: "system", content: "Você é a inteligência NOVA. Escreva copy de alto padrão sem mentiras ou clichês."}, {role: "user", content: promptEstrategico}],
+                        temperature: 0.7
+                    })
+                });
+                const d = await r.json();
+                document.getElementById('input-view').classList.add('hidden');
+                document.getElementById('result-view').classList.remove('hidden');
+                document.getElementById('output').innerText = d.choices[0].message.content;
+            } catch (e) { alert("Erro de conexão."); reset(); }
+        }
+
+        function reset() {
+            document.getElementById('input-view').classList.remove('hidden');
+            document.getElementById('result-view').classList.add('hidden');
+            document.getElementById('btn-acao').disabled = false;
+            document.getElementById('btn-acao').innerText = "Ativar Produção de Elite";
+            document.querySelectorAll('.field').forEach(f => f.value = '');
+        }
+    </script>
+</body>
+</html>
